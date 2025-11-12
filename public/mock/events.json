@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "title": "Tech Conference 2025",
+    "description": "A gathering of tech enthusiasts exploring the latest trends in AI, cloud, and web development.",
+    "category": "Tech",
+    "venue": "Innovation Hall, Chennai",
+    "startDate": "2025-12-15T09:00:00Z",
+    "endDate": "2025-12-17T17:00:00Z",
+    "availableSeats": 120
+  },
+  {
+    "id": 2,
+    "title": "Music Fiesta",
+    "description": "Join top bands and DJs for an unforgettable night of music, food, and dance.",
+    "category": "Music",
+    "venue": "Marina Grounds, Chennai",
+    "startDate": "2025-12-22T18:00:00Z",
+    "endDate": "2025-12-22T23:00:00Z",
+    "availableSeats": 300
+  },
+  {
+    "id": 3,
+    "title": "Sports Carnival",
+    "description": "An inter-college sports event featuring football, basketball, and track events.",
+    "category": "Sports",
+    "venue": "NIT Puducherry Stadium",
+    "startDate": "2026-01-05T08:00:00Z",
+    "endDate": "2026-01-07T17:00:00Z",
+    "availableSeats": 80
+  }
+]

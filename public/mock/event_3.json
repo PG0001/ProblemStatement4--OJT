@@ -1,0 +1,11 @@
+{
+  "id": 3,
+  "title": "Sports Carnival",
+  "description": "A multi-sport event featuring college teams from across South India. Cheer for your favorite athletes!",
+  "category": "Sports",
+  "venue": "NIT Puducherry Stadium",
+  "startDate": "2026-01-05T08:00:00Z",
+  "endDate": "2026-01-07T17:00:00Z",
+  "availableSeats": 80,
+  "organizerName": "NIT Puducherry Sports Council"
+}

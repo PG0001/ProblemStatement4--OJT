@@ -1,0 +1,29 @@
+[
+  {
+    "reviewId": 501,
+    "eventId": 1,
+    "userId": 3,
+    "userName": "John Doe",
+    "rating": 5,
+    "comment": "Fantastic sessions and great speakers!",
+    "date": "2025-12-20T18:00:00Z"
+  },
+  {
+    "reviewId": 502,
+    "eventId": 2,
+    "userId": 3,
+    "userName": "John Doe",
+    "rating": 4,
+    "comment": "Amazing music and energy!",
+    "date": "2025-12-22T22:00:00Z"
+  },
+  {
+    "reviewId": 503,
+    "eventId": 3,
+    "userId": 2,
+    "userName": "Organizer One",
+    "rating": 5,
+    "comment": "Well-organized and enthusiastic participants.",
+    "date": "2026-01-08T10:30:00Z"
+  }
+]

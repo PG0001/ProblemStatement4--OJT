@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Admin User",
+    "email": "admin@eventhub.com",
+    "password": "admin123",
+    "role": "Admin"
+  },
+  {
+    "id": 2,
+    "name": "Organizer One",
+    "email": "organizer@eventhub.com",
+    "password": "org123",
+    "role": "Organizer"
+  },
+  {
+    "id": 3,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "user123",
+    "role": "Attendee"
+  }
+]

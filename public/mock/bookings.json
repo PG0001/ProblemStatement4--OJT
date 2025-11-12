@@ -1,0 +1,29 @@
+[
+  {
+    "bookingId": 1001,
+    "eventId": 1,
+    "userId": 3,
+    "eventTitle": "Tech Conference 2025",
+    "bookingDate": "2025-11-11T10:00:00Z",
+    "ticketCount": 2,
+    "status": "Confirmed"
+  },
+  {
+    "bookingId": 1002,
+    "eventId": 2,
+    "userId": 3,
+    "eventTitle": "Music Fiesta",
+    "bookingDate": "2025-11-12T09:30:00Z",
+    "ticketCount": 1,
+    "status": "Pending"
+  },
+  {
+    "bookingId": 1003,
+    "eventId": 3,
+    "userId": 2,
+    "eventTitle": "Sports Carnival",
+    "bookingDate": "2025-11-13T14:00:00Z",
+    "ticketCount": 3,
+    "status": "Confirmed"
+  }
+]
