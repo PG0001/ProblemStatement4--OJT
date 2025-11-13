@@ -106,3 +106,5 @@ select * from Users;
 select * from Events;
 select * from Tickets;
 select * from Reviews;
+
+update Users set Role='Organizer' where Id=7;

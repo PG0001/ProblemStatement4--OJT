@@ -62,7 +62,8 @@ namespace EventManagementAppWebAPI.Controllers
             {
                 Token = token,
                 Role = user.Role,
-                Name = user.Name
+                Name = user.Name,
+                Id = user.Id
             });
         }
 

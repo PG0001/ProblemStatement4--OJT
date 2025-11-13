@@ -50,11 +50,23 @@ builder.Services.AddScoped<DashboardService>();    // For dashboard endpoints
 builder.Services.AddScoped<TicketService>();       // For ticket endpoints
 builder.Services.AddScoped<AuthService>();         // For authentication (if you abstract it from controller)
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<EventService>();
 
 // ✅ Add controllers and Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
 var app = builder.Build();
 
@@ -64,7 +76,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

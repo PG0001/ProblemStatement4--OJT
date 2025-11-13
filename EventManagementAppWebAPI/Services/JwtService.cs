@@ -22,10 +22,11 @@ namespace EventManagementAppWebAPI.Services
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role)
-            };
+        new Claim("UserId", user.Id.ToString()), // ✅ Add this line
+        new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+        new Claim(ClaimTypes.Email, user.Email),
+        new Claim(ClaimTypes.Role, user.Role)
+    };
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
@@ -37,5 +38,6 @@ namespace EventManagementAppWebAPI.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
     }
 }
