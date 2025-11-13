@@ -1,5 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "../hooks/AuthContext";
+import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import EventList from "../pages/EventList";
 import EventDetail from "../pages/EventDetail";
@@ -11,9 +10,7 @@ import Login from "../pages/Login";
 
 export default function AppRoutes() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
+    <Routes>
           {/* Public routes */}
           <Route path="/" element={<EventList />} />
           <Route path="/login" element={<Login />} />
@@ -48,7 +45,5 @@ export default function AppRoutes() {
 
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </Router>
-    </AuthProvider>
   );
 }

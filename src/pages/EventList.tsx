@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../api/axios";
 
 interface Event {
   id: number;
@@ -13,7 +14,9 @@ interface Event {
 }
 
 export default function EventList() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState<Event[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
@@ -26,8 +29,14 @@ export default function EventList() {
     setLoading(true);
     try {
       // Later, replace with backend API: http://localhost:5000/api/events
-      const res = await axios.get("/mock/events.json"); // mock for now
+      const res = await api.get("/Event"); // mock for now
       setEvents(res.data);
+      
+      // Extract unique categories from events
+      const uniqueCategories = Array.from(
+        new Set(res.data.map((event: Event) => event.category))
+      );
+      setCategories(uniqueCategories as string[]);
     } catch (err) {
       console.error("Error fetching events:", err);
     } finally {
@@ -37,69 +46,72 @@ export default function EventList() {
 
   const filteredEvents = events.filter((ev) => {
     const matchSearch =
-      ev.title.toLowerCase().includes(search.toLowerCase()) ||
-      ev.description.toLowerCase().includes(search.toLowerCase());
+      (ev.title?.toLowerCase() || "").includes(search.toLowerCase()) ||
+      (ev.description?.toLowerCase() || "").includes(search.toLowerCase());
     const matchCategory = category ? ev.category === category : true;
     return matchSearch && matchCategory;
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">🎟️ EventHub</h1>
+    <div className="min-h-screen bg-gray-900 text-gray-100 py-6 relative">
+      <div className="max-w-6xl mx-auto w-full px-4">
+        <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center gap-3 bg-gray-800 shadow-sm rounded p-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="bg-gray-700 border border-gray-600 text-gray-100 placeholder-gray-300 p-1 text-sm rounded w-56 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
 
-      {/* Filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6 justify-center">
-        <input
-          type="text"
-          placeholder="Search events..."
-          className="border p-2 rounded w-full md:w-1/3"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select
-          className="border p-2 rounded w-full md:w-1/4"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >   
-          <option value="">All Categories</option>
-          <option value="Music">Music</option>
-          <option value="Sports">Sports</option>
-          <option value="Tech">Tech</option>
-          <option value="Education">Education</option>
-        </select>
-      </div>
-
-      {/* Event Cards */}
-      {loading ? (
-        <p className="text-center text-gray-500">Loading events...</p>
-      ) : filteredEvents.length === 0 ? (
-        <p className="text-center text-gray-500">No events found.</p>
-      ) : (
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredEvents.map((ev) => (
-            <div key={ev.id} className="bg-white p-4 rounded-xl shadow hover:shadow-lg transition">
-              <h2 className="text-xl font-semibold mb-2">{ev.title}</h2>
-              <p className="text-gray-600 mb-2">{ev.venue}</p>
-              <p className="text-gray-500 text-sm mb-2">
-                {new Date(ev.startDate).toLocaleDateString()} -{" "}
-                {new Date(ev.endDate).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-gray-600 mb-3 line-clamp-2">{ev.description}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-700">
-                  Seats: {ev.availableSeats}
-                </span>
-                <a
-                  href={`/events/${ev.id}`}
-                  className="text-blue-600 hover:underline text-sm font-semibold"
-                >
-                  View Details
-                </a>
-              </div>
+            <div className="flex items-center gap-2">
+              <label className="sr-only">Filter</label>
+              <select
+                className="bg-gray-700 border border-gray-600 text-gray-100 p-1 text-sm rounded w-36 focus:outline-none"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">All</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat} className="bg-gray-800 text-gray-100">
+                    {cat}
+                  </option>
+                ))}
+              </select>
             </div>
-          ))}
+          </div>
         </div>
-      )}
+
+        {/* Event Cards */}
+        {loading ? (
+          <p className="text-center text-gray-300">Loading events...</p>
+        ) : filteredEvents.length === 0 ? (
+          <p className="text-center text-gray-300">No events found.</p>
+        ) : (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filteredEvents.map((ev) => (
+              <div key={ev.id} className="bg-gray-800 p-3 rounded-lg shadow-sm hover:shadow-lg transition">
+                <h2 className="text-lg font-semibold mb-1 text-gray-100">{ev.title}</h2>
+                <p className="text-gray-300 mb-1">{ev.venue}</p>
+                <p className="text-gray-400 text-sm mb-1">
+                  {new Date(ev.startDate).toLocaleDateString()} - {new Date(ev.endDate).toLocaleDateString()}
+                </p>
+                <p className="text-sm text-gray-200 mb-2 line-clamp-2">{ev.description}</p>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-300">Seats: {ev.availableSeats}</span>
+                  <button
+                    onClick={() => navigate(`/events/${ev.id}`)}
+                    className="text-blue-300 hover:text-blue-100 text-sm font-semibold hover:underline"
+                  >
+                    View Details
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

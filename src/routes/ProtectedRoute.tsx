@@ -12,7 +12,9 @@ export default function ProtectedRoute({
   const { user } = useAuth();
 
   if (!user) return <Navigate to="/login" replace />;
-  if (!allowedRoles.includes(user.role)) return <Navigate to="/" replace />;
+  // Do a case-insensitive check for allowed roles to avoid casing mismatches
+  const allowedLower = allowedRoles.map((r) => r.toLowerCase());
+  if (!allowedLower.includes(user.role.toLowerCase())) return <Navigate to="/" replace />;
 
   return children;
 }

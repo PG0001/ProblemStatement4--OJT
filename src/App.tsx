@@ -1,12 +1,18 @@
 
-import './App.css'
 import AppRoutes from "./routes/AppRoutes";
+import Navbar from "./components/Navbar";
+import { AuthProvider } from "./hooks/AuthContext";
+import { BrowserRouter as Router } from "react-router-dom";
 
-
-  function App() {
-  
-    return <AppRoutes />;
-  
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <Navbar />
+        <AppRoutes />
+      </Router>
+    </AuthProvider>
+  );
 }
 
 export default App;
