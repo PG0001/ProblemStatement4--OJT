@@ -1,5 +1,6 @@
 ﻿using EventManagementAppLibrary.Interfaces;
 using EventManagementAppLibrary.Models;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,10 @@ namespace EventManagementAppLibrary.Repositories
             Events = eventRepository;
             Tickets = ticketRepository;
             Reviews = reviewRepository;
+        }
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
         }
 
         public async Task<int> SaveAsync()

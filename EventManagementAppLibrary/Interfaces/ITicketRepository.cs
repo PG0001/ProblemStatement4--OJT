@@ -13,6 +13,8 @@ namespace EventManagementAppLibrary.Interfaces
         Task<IEnumerable<Ticket>> GetByEventAsync(int eventId);
         Task<int> GetTicketsSoldAsync(int eventId);
         Task<bool> HasUserBookedEventAsync(int userId, int eventId);
+        IQueryable<Ticket> GetTicketsWithEventAndUser();
+
     }
 
 }

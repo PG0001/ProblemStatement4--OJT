@@ -62,6 +62,36 @@ namespace EventManagementAppLibrary.Repositories
                 ((startDate >= e.StartDate && startDate <= e.EndDate) ||
                  (endDate >= e.StartDate && endDate <= e.EndDate)));
         }
+        public async Task<bool> HasOverlapAsync(int? excludeId, string venue, DateTime start, DateTime end)
+        {
+            return await _dbSet.AnyAsync(e =>
+                e.Venue == venue &&
+                e.Id != (excludeId ?? 0) &&
+                ((start >= e.StartDate && start < e.EndDate) ||
+                 (end > e.StartDate && end <= e.EndDate) ||
+                 (start <= e.StartDate && end >= e.EndDate))
+            );
+        }
+        public async Task<IEnumerable<Event>> SearchAsync(string? search, string? category, DateTime? start, DateTime? end)
+        {
+            var query = _dbSet.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(e =>
+                    e.Title.Contains(search) ||
+                    e.Description.Contains(search));
+
+            if (!string.IsNullOrWhiteSpace(category))
+                query = query.Where(e => e.Category == category);
+
+            if (start.HasValue)
+                query = query.Where(e => e.StartDate >= start.Value);
+
+            if (end.HasValue)
+                query = query.Where(e => e.EndDate <= end.Value);
+
+            return await query.ToListAsync();
+        }
 
         public async Task<IEnumerable<Event>> GetPopularEventsAsync(int topN)
         {

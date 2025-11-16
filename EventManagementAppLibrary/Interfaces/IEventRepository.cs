@@ -12,10 +12,13 @@ namespace EventManagementAppLibrary.Interfaces
         Task<IEnumerable<Event>> GetByOrganizerAsync(int organizerId);
         Task<IEnumerable<Event>> GetByCategoryAsync(string category);
         Task<IEnumerable<Event>> GetByVenueAsync(string venue);
-        Task<IEnumerable<Event>> SearchAsync(string keyword);
+        Task<IEnumerable<Event>> SearchAsync(string? search, string? category, DateTime? start, DateTime? end);
+
         Task<IEnumerable<Event>> FilterAsync(string? category, string? venue, DateTime? start, DateTime? end);
         Task<bool> IsScheduleConflictAsync(string venue, DateTime startDate, DateTime endDate, int? excludeEventId = null);
         Task<IEnumerable<Event>> GetPopularEventsAsync(int topN);
+        Task<bool> HasOverlapAsync(int? excludeId, string venue, DateTime start, DateTime end);
+
     }
 
 }

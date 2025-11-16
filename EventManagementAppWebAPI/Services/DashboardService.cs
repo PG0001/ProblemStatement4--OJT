@@ -1,14 +1,17 @@
-﻿using EventManagementAppLibrary.Interfaces;
+﻿using AutoMapper;
+using EventManagementAppLibrary.Interfaces;
 
 namespace EventManagementAppWebAPI.Services
 {
     public class DashboardService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public DashboardService(IUnitOfWork unitOfWork)
+        public DashboardService(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<object> GetAdminDashboardAsync()
@@ -17,6 +20,9 @@ namespace EventManagementAppWebAPI.Services
             var eventsList = await _unitOfWork.Events.GetAllAsync();
             var tickets = await _unitOfWork.Tickets.GetAllAsync();
             var reviews = await _unitOfWork.Reviews.GetAllAsync();
+
+            // Example usage: (not needed now but ready)
+            // var mappedUsers = _mapper.Map<List<User>>(users);
 
             int totalUsers = users.Count();
             int totalEvents = eventsList.Count();
@@ -38,8 +44,12 @@ namespace EventManagementAppWebAPI.Services
         {
             var eventsList = (await _unitOfWork.Events.FindAsync(e => e.OrganizerId == organizerId)).ToList();
             var eventIds = eventsList.Select(e => e.Id).ToList();
+
             var tickets = (await _unitOfWork.Tickets.FindAsync(t => eventIds.Contains(t.EventId))).ToList();
             var reviews = (await _unitOfWork.Reviews.FindAsync(r => eventIds.Contains(r.EventId))).ToList();
+
+            // Example usage:
+            // var mappedEvents = _mapper.Map<List<Event>>(eventsList);
 
             int totalEvents = eventsList.Count();
             int totalTickets = tickets.Count();

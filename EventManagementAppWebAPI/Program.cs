@@ -3,16 +3,17 @@ using EventManagementAppLibrary.Models;
 using EventManagementAppLibrary.Repositories;
 using EventManagementAppWebAPI.Services;
 using EventManagementAppWebAPI.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]);
 
+// ✅ Authentication (JWT)
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -32,31 +33,45 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// ✅ Configure DbContext properly
+// ✅ Serilog
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .CreateLogger();
+
+// ✅ DbContext
 builder.Services.AddDbContext<EventContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// ✅ Register repositories
+// ✅ Repositories
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ITicketRepository, TicketRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
-// ✅ Register UnitOfWork and services
+// ✅ UnitOfWork + Services
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-builder.Services.AddScoped<DashboardService>();    // For dashboard endpoints
-builder.Services.AddScoped<TicketService>();       // For ticket endpoints
-builder.Services.AddScoped<AuthService>();         // For authentication (if you abstract it from controller)
+builder.Services.AddScoped<DashboardService>();
+builder.Services.AddScoped<TicketService>();
+builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<EventService>();
 
-// ✅ Add controllers and Swagger
+// ✅ Controllers + Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// ✅ Memory Cache
+builder.Services.AddMemoryCache();
+
+// ✅ AutoMapper (fixed)
+builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
+
+// ✅ CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend",
@@ -68,14 +83,23 @@ builder.Services.AddCors(options =>
         });
 });
 
+// ✅ Use Serilog
+builder.Host.UseSerilog();
+
 var app = builder.Build();
 
-// ✅ Pipeline
+// ✅ Middleware Pipeline
+app.UseSerilogRequestLogging();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<EventManagementAppWebAPI.Middleware.ExceptionMiddleware>();
+app.UseMiddleware<EventManagementAppWebAPI.Middleware.RequestLoggingMiddleware>();
+
 app.UseCors("AllowFrontend");
 app.UseHttpsRedirection();
 app.UseAuthentication();

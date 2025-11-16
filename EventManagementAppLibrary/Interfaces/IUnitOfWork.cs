@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,8 @@ namespace EventManagementAppLibrary.Interfaces
         ITicketRepository Tickets { get; }
         IReviewRepository Reviews { get; }
         Task<int> SaveAsync();
+        Task<IDbContextTransaction> BeginTransactionAsync();
+
     }
 
 }

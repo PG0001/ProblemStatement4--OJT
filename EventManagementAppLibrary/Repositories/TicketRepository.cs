@@ -20,6 +20,12 @@ namespace EventManagementAppLibrary.Repositories
                 .Where(t => t.UserId == userId)
                 .ToListAsync();
         }
+        public IQueryable<Ticket> GetTicketsWithEventAndUser()
+        {
+            return _context.Set<Ticket>()
+                .Include(t => t.Event)
+                .Include(t => t.User);
+        }
 
         public async Task<IEnumerable<Ticket>> GetByEventAsync(int eventId)
         {
