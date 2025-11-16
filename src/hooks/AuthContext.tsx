@@ -50,7 +50,7 @@ useEffect(() => {
     const sessId = sessionStorage.getItem("user_Id");
     const sessName = sessionStorage.getItem("user_name");
     const sessRole = sessionStorage.getItem("user_role") as User["role"] | null;
-    const sessEmail = sessionStorage.getItem("user_email");
+    //const sessEmail = sessionStorage.getItem("user_email");
 
     if (sessId && sessName && sessRole) {
       // ✅ Use sessionStorage directly if available

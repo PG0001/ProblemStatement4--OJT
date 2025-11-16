@@ -11,10 +11,18 @@ export default function ProtectedRoute({
 }) {
   const { user } = useAuth();
 
-  if (!user) return <Navigate to="/login" replace />;
-  // Do a case-insensitive check for allowed roles to avoid casing mismatches
+  // Check token/session storage directly as fallback
+  const token = localStorage.getItem("token");
+  const sessionRole = sessionStorage.getItem("user_role");
+
+  // If no user and no token → redirect to login
+  if (!user && !token) return <Navigate to="/login" replace />;
+
+  // Determine the current role (from user state first, then session)
+  const currentRole = user?.role || sessionRole || "";
   const allowedLower = allowedRoles.map((r) => r.toLowerCase());
-  if (!allowedLower.includes(user.role.toLowerCase())) return <Navigate to="/" replace />;
+
+  if (!allowedLower.includes(currentRole.toLowerCase())) return <Navigate to="/" replace />;
 
   return children;
 }
